@@ -1,0 +1,5 @@
+package: bitbucket.org/atlassian/stridestats
+import:
+- package: github.com/rs/xstats
+  subpackages:
+  - dogstatsd
