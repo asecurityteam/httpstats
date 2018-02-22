@@ -1,7 +1,6 @@
 package stridestats
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -9,44 +8,24 @@ import (
 )
 
 func TestGlobalRollupTagComputation(t *testing.T) {
-	var tagMap = map[string]string{
-		"service": "test",
-		"region":  "west1",
-		"az":      "west1-a",
-		"host":    "i-abcdefg",
-	}
-	var globals = []string{"region", "az", "host", "container"}
-	var rollup = &rollupStatWrapper{tagMap: tagMap, globals: globals}
-	rollup.computeTags()
-	for offset, global := range globals {
-		var found bool
-		for _, tag := range rollup.rollups[offset] {
-			if tag == fmt.Sprintf("%s:%s", global, globalName) {
-				found = true
-			}
-		}
-		if !found {
-			t.Fatalf("invalid rollup: %v", rollup.rollups[offset])
-		}
-	}
-}
-
-func TestGlobalRollupMetricDuplication(t *testing.T) {
 	var ctrl = gomock.NewController(t)
 	defer ctrl.Finish()
 
 	var stat = NewMockXStater(ctrl)
-	var tagMap = map[string]string{
-		"service": "test",
-		"region":  "west1",
-		"az":      "west1-a",
-		"host":    "i-abcdefg",
-	}
 	var globals = []string{"region", "az", "host", "container"}
-	var rollup = &rollupStatWrapper{tagMap: tagMap, globals: globals, Sender: stat}
-	rollup.computeTags()
-	stat.EXPECT().Timing("stat", time.Duration(1), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Times(len(globals))
-	stat.EXPECT().Histogram("stat", 1.0, gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Times(len(globals))
-	rollup.Timing("stat", 1)
-	rollup.Histogram("stat", 1.0)
+	var statTags = []string{"region:test", "az:test", "host:test", "extra:value"}
+	var expectedTagSets = [][]string{
+		[]string{"region:test", "az:test", "host:test", "extra:value", "container:global"},
+		[]string{"region:test", "az:test", "host:global", "extra:value", "container:global"},
+		[]string{"region:test", "az:global", "host:global", "extra:value", "container:global"},
+		[]string{"region:global", "az:global", "host:global", "extra:value", "container:global"},
+	}
+	var rollupClient = &rollupStatWrapper{globals: globals, Sender: stat}
+
+	for _, expectedTagSet := range expectedTagSets {
+		stat.EXPECT().Timing("stat", time.Duration(1), expectedTagSet[0], expectedTagSet[1], expectedTagSet[2], expectedTagSet[3], expectedTagSet[4])
+		stat.EXPECT().Histogram("stat", 1.0, expectedTagSet[0], expectedTagSet[1], expectedTagSet[2], expectedTagSet[3], expectedTagSet[4])
+	}
+	rollupClient.Timing("stat", time.Duration(1), statTags...)
+	rollupClient.Histogram("stat", 1.0, statTags...)
 }
