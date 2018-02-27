@@ -28,100 +28,23 @@ func TestMiddlewareOptionTag(t *testing.T) {
 	defer ctrl.Finish()
 
 	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionTag("test", "test"))
+	var result, e = NewMiddleware(
+		middlewareOptionSender(sender),
+		MiddlewareOptionTag("test", "test"),
+		MiddlewareOptionBytesInName("bytesin"),
+		MiddlewareOptionBytesOutName("bytesout"),
+		MiddlewareOptionBytesTotalName("bytestotal"),
+		MiddlewareOptionRequestTimeName("requesttime"),
+		MiddlewareOptionRequestTag(func(*http.Request) (string, string) { return "test2", "test2" }),
+	)
 	if e != nil {
 		t.Fatal(e.Error())
 	}
 	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing(m.requestTime, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesIn, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesOut, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesTotal, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
-}
-
-func TestMiddlewareOptionBytesInName(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionBytesInName("bytesin"))
-	if e != nil {
-		t.Fatal(e.Error())
-	}
-	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing(m.requestTime, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram("bytesin", gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesOut, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesTotal, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
-}
-
-func TestMiddlewareOptionBytesOutName(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionBytesOutName("bytesout"))
-	if e != nil {
-		t.Fatal(e.Error())
-	}
-	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing(m.requestTime, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesIn, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram("bytesout", gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesTotal, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
-}
-
-func TestMiddlewareOptionBytesTotalName(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionBytesTotalName("bytestotal"))
-	if e != nil {
-		t.Fatal(e.Error())
-	}
-	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing(m.requestTime, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesIn, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesOut, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram("bytestotal", gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
-}
-
-func TestMiddlewareOptionRequestTimeName(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionRequestTimeName("requesttime"))
-	if e != nil {
-		t.Fatal(e.Error())
-	}
-	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing("requesttime", gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesIn, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesOut, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	sender.EXPECT().Histogram(m.bytesTotal, gomock.Any(), "method:GET", "status_code:200", "status:ok")
-	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
-}
-
-func TestMiddlewareOptionRequestTag(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), MiddlewareOptionRequestTag(func(*http.Request) (string, string) { return "test", "test" }))
-	if e != nil {
-		t.Fatal(e.Error())
-	}
-	var m = result(fixtureHandler{}).(*Middleware)
-	sender.EXPECT().Timing(m.requestTime, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesIn, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesOut, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
-	sender.EXPECT().Histogram(m.bytesTotal, gomock.Any(), "method:GET", "status_code:200", "status:ok", "test:test")
+	sender.EXPECT().Timing("requesttime", gomock.Any(), "method:GET", "status_code:200", "status:ok", "test2:test2", "test:test")
+	sender.EXPECT().Histogram("bytesin", gomock.Any(), "method:GET", "status_code:200", "status:ok", "test2:test2", "test:test")
+	sender.EXPECT().Histogram("bytesout", gomock.Any(), "method:GET", "status_code:200", "status:ok", "test2:test2", "test:test")
+	sender.EXPECT().Histogram("bytestotal", gomock.Any(), "method:GET", "status_code:200", "status:ok", "test2:test2", "test:test")
 	m.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
 }
 
