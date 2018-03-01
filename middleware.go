@@ -10,8 +10,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"bitbucket.org/hipchat/respwrapper"
-
 	"github.com/rs/xstats"
 	"github.com/rs/xstats/dogstatsd"
 )
@@ -54,7 +52,7 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		tags = append(tags, fmt.Sprintf("%s:%s", k, v))
 	}
 	xstats.FromRequest(r).AddTags(tags...)
-	var wrapper = respwrapper.WrapWriter(w)
+	var wrapper = wrapWriter(w, r.ProtoMajor)
 	var bodyWrapper = &recordingReader{r.Body, new(int32)}
 	r.Body = bodyWrapper
 	var start = time.Now()
