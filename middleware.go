@@ -237,13 +237,13 @@ func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler
 	}, nil
 }
 
-// OutOfBand returns an XStater with all of the configuration provided to the
+// OutOfBand returns a context with all of the configuration provided to the
 // middleware. This is provided with the primary intent of allowing for stats
 // emissions during runtime setup (such as main.go) and background routines that
 // are not attached to a request or request context.
-func OutOfBand(middleware func(http.Handler) http.Handler) xstats.XStater {
+func OutOfBand(ctx context.Context, middleware func(http.Handler) http.Handler) context.Context {
 	if m, ok := middleware(nil).(*Middleware); ok {
-		return xstats.New(m.finalSender)
+		ctx = xstats.NewContext(ctx, xstats.New(m.finalSender))
 	}
-	return xstats.FromContext(context.Background())
+	return ctx
 }
