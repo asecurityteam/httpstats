@@ -120,3 +120,27 @@ func TestTransportOptions(t *testing.T) {
 	var resp, _ = r.RoundTrip(req)
 	resp.Body.Close()
 }
+
+func TestTransportNoPanicWhenBodyNil(t *testing.T) {
+	var ctrl = gomock.NewController(t)
+	defer ctrl.Finish()
+
+	// var sender = NewMockXStater(ctrl)
+	var result = NewTransport(
+		TransportOptionTag("test", "test"),
+		TransportOptionRequestTag(func(*http.Request) (string, string) { return "test2", "test2" }),
+		TransportOptionRequestTimeName("requesttime"),
+		TransportOptionBytesInName("bytesin"),
+		TransportOptionBytesOutName("bytesout"),
+		TransportOptionBytesTotalName("bytestotal"),
+		TransportOptionDNSName("dns"),
+		TransportOptionGotConnectionName("gotcon"),
+		TransportOptionTLSName("tls"),
+		TransportOptionWroteHeadersName("wroteheaders"),
+		TransportOptionFirstResponseByteName("firstbyte"),
+		TransportOptionPutIdleName("putidle"),
+	)
+	var r = result(http.DefaultTransport)
+	var req, _ = http.NewRequest(http.MethodGet, "https://localhost/asdfasdfadsf", nil)
+	_, _ = r.RoundTrip(req)
+}
