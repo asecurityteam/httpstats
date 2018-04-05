@@ -177,7 +177,9 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	}
 	tags = append(tags, t.tags...)
 	var bodyWrapper = &recordingReader{r.Body, new(int32)}
-	r.Body = bodyWrapper
+	if r.Body != nil {
+		r.Body = bodyWrapper
+	}
 	r = r.WithContext(
 		httptrace.WithClientTrace(
 			r.Context(),
@@ -199,13 +201,17 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	var duration = time.Since(start)
 	var statusCode = "error"
 	var status = "error"
+	var bytesRead = 0
 	if e == nil {
 		statusCode = fmt.Sprintf("%d", resp.StatusCode)
 		status = responseStatus(r.Context(), resp.StatusCode)
+		if r.Body != nil {
+			bytesRead = bodyWrapper.BytesRead()
+		}
 		resp.Body = &recordingClientResponseBodyReadCloser{
 			ReadCloser:       resp.Body,
 			bytesRead:        new(int32),
-			requestBytesRead: bodyWrapper.BytesRead(),
+			requestBytesRead: bytesRead,
 			statName:         t.bytesOut,
 			totalStatName:    t.bytesTotal,
 			tags:             tags,
@@ -214,7 +220,7 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	}
 	var timerTags = append(tags, fmt.Sprintf("method:%s", r.Method), fmt.Sprintf("status_code:%s", statusCode), fmt.Sprintf("status:%s", status))
 	xstats.FromRequest(r).Timing(t.requestTime, duration, timerTags...)
-	xstats.FromRequest(r).Histogram(t.bytesIn, float64(bodyWrapper.BytesRead()), tags...)
+	xstats.FromRequest(r).Histogram(t.bytesIn, float64(bytesRead), tags...)
 	return resp, e
 }
 
