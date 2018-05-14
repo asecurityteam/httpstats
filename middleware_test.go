@@ -28,7 +28,7 @@ func TestMiddlewareOptionTag(t *testing.T) {
 	defer ctrl.Finish()
 
 	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(
+	var result, _, e = NewMiddleware(
 		middlewareOptionSender(sender),
 		MiddlewareOptionTag("test", "test"),
 		MiddlewareOptionBytesInName("bytesin"),
@@ -88,7 +88,7 @@ func TestMiddlewareOptionUDPSender(t *testing.T) {
 	defer ctrl.Finish()
 
 	var sender = NewMockXStater(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPSenderDialer("localhost", 1, time.Second, "test", fixtureDialFunc))
+	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPSenderDialer("localhost", 1, time.Second, "test", fixtureDialFunc))
 	if e != nil {
 		t.Fatal(e.Error())
 	}
@@ -106,7 +106,7 @@ func TestMiddlewareOptionUDPGlobalRollupSender(t *testing.T) {
 
 	var sender = NewMockXStater(ctrl)
 	var rollupSender = NewMockSender(ctrl)
-	var result, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPGlobalRollupSenderDialer("localhost", 1, time.Second, "test", []string{"test"}, fixtureDialFunc))
+	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPGlobalRollupSenderDialer("localhost", 1, time.Second, "test", []string{"test"}, fixtureDialFunc))
 	if e != nil {
 		t.Fatal(e.Error())
 	}
