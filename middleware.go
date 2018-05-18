@@ -194,8 +194,10 @@ func MiddlewareOptionRequestTag(tagger func(*http.Request) (string, string)) Mid
 	}
 }
 
-// NewMiddleware configures and constructs a stat emitting HTTP middleware.
-func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler, error) {
+// NewMiddleware configures and constructs a stat emitting HTTP middleware along
+// with a stat client that can be used to generate metrics outside the scope
+// of an HTTP request.
+func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler, xstats.XStater, error) {
 	xstats.DisablePooling = true
 	var e error
 	var m = &Middleware{
@@ -209,7 +211,7 @@ func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler
 	for _, option := range options {
 		m, e = option(m)
 		if e != nil {
-			return nil, e
+			return nil, nil, e
 		}
 	}
 
@@ -234,16 +236,5 @@ func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler
 			senders:          m.senders,
 			xstatsMiddleware: xstats.NewHandler(taggedSender, nil),
 		}
-	}, nil
-}
-
-// OutOfBand returns a context with all of the configuration provided to the
-// middleware. This is provided with the primary intent of allowing for stats
-// emissions during runtime setup (such as main.go) and background routines that
-// are not attached to a request or request context.
-func OutOfBand(ctx context.Context, middleware func(http.Handler) http.Handler) context.Context {
-	if m, ok := middleware(nil).(*Middleware); ok {
-		ctx = xstats.NewContext(ctx, xstats.New(m.finalSender))
-	}
-	return ctx
+	}, xstats.New(taggedSender), nil
 }
