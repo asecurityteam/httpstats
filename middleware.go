@@ -194,7 +194,9 @@ func MiddlewareOptionRequestTag(tagger func(*http.Request) (string, string)) Mid
 	}
 }
 
-// NewMiddleware configures and constructs a stat emitting HTTP middleware.
+// NewMiddleware configures and constructs a stat emitting HTTP middleware along
+// with a stat client that can be used to generate metrics outside the scope
+// of an HTTP request.
 func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler, xstats.XStater, error) {
 	xstats.DisablePooling = true
 	var e error
