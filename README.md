@@ -1,6 +1,6 @@
-# stridestats #
+# httpstats #
 
-**Standard datadog/statsd integration for Stride services.**
+**Standard datadog/statsd integration for HTTP services.**
 
 This project contains middleware for HTTP services and clients that uses
 [xstats](https://github.com/rs/xstats) emit detailed runtime metrics for
@@ -14,8 +14,8 @@ The middleware exported is a `func(http.Handler) http.Handler` and should
 work with virtually any router/mux implementation that supports middleware.
 
 ```go
-var middleware = stridestats.NewMiddleware(
-  stridestats.MiddlewareOptionUDPSender("statsd:8125", 1<<15, 10*time.Second, "myservice."),
+var middleware = httpstats.NewMiddleware(
+  httpstats.MiddlewareOptionUDPSender("statsd:8125", 1<<15, 10*time.Second, "myservice."),
 )
 ```
 
@@ -26,7 +26,7 @@ by the middleware are documented below.
 
 Each service installing the middleware should emit stats to a statsd or datadog
 agent. The agent location and settings are configurable through the
-`stridestats.MiddlewareOptionUDPSender` or
+`httpstats.MiddlewareOptionUDPSender` or
 `MiddlewareOptionUDPGlobalRollupSender` option. The global rollup option helps
 prevent several forms of skew that can arise from statsd and datadog
 aggregation of data and is described in greater detail below.
@@ -38,8 +38,8 @@ included that will properly manage spans for outgoing HTTP requests. To apply:
 
 ```golang
 var client = &http.Client{
-  Transport: stridestats.NewTransport(
-    stridestats.TransportOptionTag("dependency", "some-other-service"),
+  Transport: httpstats.NewTransport(
+    httpstats.TransportOptionTag("dependency", "some-other-service"),
   )(http.DefaultTransport),
 }
 ```
@@ -57,25 +57,25 @@ using the same stat client from the incoming request context.
 
     A histogram of the number of bytes received in each incoming request. The
     name for this can be overridden with
-    `stridestats.MiddlewareOptionBytesInName`.
+    `httpstats.MiddlewareOptionBytesInName`.
 
 -   service_bytes_returned
 
     A histogram of the number of bytes sent in response to each incoming
     request. The name for this can be overridden with
-    `stridestats.MiddlewareOptionBytesOutName`.
+    `httpstats.MiddlewareOptionBytesOutName`.
 
 -   service_bytes_total
 
     A histogram of the number of bytes sent or received as part of each incoming
     request. The name for this can be overridden with
-    `stridestats.MiddlewareOptionBytesTotalName`.
+    `httpstats.MiddlewareOptionBytesTotalName`.
 
 -   service_time
 
     A timer of the amount of time spend processing a request. The name
     for this can be overridden with
-    `stridestats.MiddlewareOptionRequestTimeName`.
+    `httpstats.MiddlewareOptionRequestTimeName`.
 
 #### Tags ####
 
@@ -98,8 +98,8 @@ metadata for metrics. All HTTP service metrics will be tagged with:
     cases where the request context is explicitly cancelled.
 
 Additional tags may be injected either statically or on a per-request basis
-using the `stridestats.MiddlewareOptionTag` and
-`stridestats.MiddlewareOptionRequestTag` options respectively.
+using the `httpstats.MiddlewareOptionTag` and
+`httpstats.MiddlewareOptionRequestTag` options respectively.
 
 ### HTTP Client ###
 
@@ -107,18 +107,18 @@ using the `stridestats.MiddlewareOptionTag` and
 
     A histogram of the number of bytes read from the response body of an
     outgoing request. This name can be overridden using
-    `stridestats.TransportOptionBytesInName`.
+    `httpstats.TransportOptionBytesInName`.
 
 -   client_request_bytes_sent
 
     A histogram of the number of bytes sent in the body of an outgoing request.
-    This name can be overridden using `stridestats.TransportOptionBytesOutName`.
+    This name can be overridden using `httpstats.TransportOptionBytesOutName`.
 
 -   client_request_bytes_total
 
     A histogram of the total bytes sent and read as part of an outgoing request.
     This name can be overridden using
-    `stridestats.TransportOptionBytesTotalName`.
+    `httpstats.TransportOptionBytesTotalName`.
 
 -   client_request_time
 
@@ -146,7 +146,7 @@ using the `stridestats.MiddlewareOptionTag` and
 
     A timer of how long it took for the HTTP client to acquire a TCP connection.
     This name may be overridden using
-    `stridestats.TransportOptionGotConnectionName`.
+    `httpstats.TransportOptionGotConnectionName`.
 
     This metric will be tagged with the following:
 
@@ -164,13 +164,13 @@ using the `stridestats.MiddlewareOptionTag` and
 
     A timer of how long a cached connection spend in the idle pool before it
     was used again. This name may be overridden using
-    `stridestats.TransportOptionConnectionIdleName`.
+    `httpstats.TransportOptionConnectionIdleName`.
 
 -   client_dns
 
     A timer of how long it took to resolve the DNS name associated with the
     outgoing request. This name may be overridden using
-    `stridestats.TransportOptionDNSName`.
+    `httpstats.TransportOptionDNSName`.
 
     This metric will be tagged with the following:
 
@@ -188,7 +188,7 @@ using the `stridestats.MiddlewareOptionTag` and
 
     A timer of how long it took to complete the TLS handshake after acquiring
     a TCP connection to the remote host. This name may be overridden using
-    `stridestats.TransportOptionTLSName`.
+    `httpstats.TransportOptionTLSName`.
 
     This metric will be tagged with the following:
 
@@ -202,7 +202,7 @@ using the `stridestats.MiddlewareOptionTag` and
     A timer of how long it took between getting a connection and writing the
     request headers to the stream. This measure should closely represent the
     total amount of time it took for a request to leave the service. This
-    name may be overridden using `stridestats.TransportOptionWroteHeadersName`.
+    name may be overridden using `httpstats.TransportOptionWroteHeadersName`.
 
 -   client_first_response_byte
 
@@ -210,12 +210,12 @@ using the `stridestats.MiddlewareOptionTag` and
     getting the first byte of a response. This measure should closely represent
     the amount of time it took the remote service to process and respond with
     the latency of the network included in the measure. This name may be
-    overridden using `stridestats.TransportOptionFirstResponseByteName`.
+    overridden using `httpstats.TransportOptionFirstResponseByteName`.
 
 -   client_put_idle
 
     A counter emitted each time a connection is placed into the idle pool. This
-    name may be overridden using `stridestats.TransportOptionPutIdleName`.
+    name may be overridden using `httpstats.TransportOptionPutIdleName`.
 
     This metric will be tagged with the following:
 

@@ -1,4 +1,4 @@
-package stridestats
+package httpstats
 
 import (
 	"fmt"
