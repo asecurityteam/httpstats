@@ -1,4 +1,4 @@
-package stridestats
+package httpstats
 
 import (
 	"context"
@@ -150,7 +150,7 @@ func newClientTrace(stat xstats.XStater, tags []string, gotConnectionName string
 }
 
 // Transport is an http.RoundTripper wrapper that instruments HTTP clients with
-// the standard Stride metrics.
+// the standard SecDev metrics.
 type Transport struct {
 	tags           []string
 	next           http.RoundTripper

@@ -4,8 +4,8 @@ pipelines:
     - step:
         name: GoImports
         script:
-          - mkdir -p /go/src/bitbucket.org/atlassian/stridestats
-          - cp -R ./* /go/src/bitbucket.org/atlassian/stridestats
+          - mkdir -p /go/src/bitbucket.org/atlassian/httpstats
+          - cp -R ./* /go/src/bitbucket.org/atlassian/httpstats
           - go get -u golang.org/x/tools/cmd/goimports
           - if [[ "$(goimports -l -d .)" != "" ]]; then echo "$(goimports -l -d .)" && exit 1; fi
     - step:
@@ -14,7 +14,7 @@ pipelines:
           - go get -u github.com/alecthomas/gometalinter
           - gometalinter --install --update
           - gometalinter --vendor --disable-all --enable=vet --enable=vetshadow --enable=golint --enable=ineffassign --enable=goconst --tests .
-    -step:
+    - step:
         name: Tests
         script:
           - curl https://glide.sh/get | sh

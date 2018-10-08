@@ -1,4 +1,4 @@
-package stridestats
+package httpstats
 
 import (
 	"context"
@@ -15,7 +15,7 @@ import (
 )
 
 // Middleware is an http.Handler wrapper that instruments HTTP servers with the
-// standard Stride metrics.
+// standard SecDev metrics.
 type Middleware struct {
 	senders          []xstats.Sender
 	tags             []string
