@@ -59,9 +59,9 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	m.next.ServeHTTP(wrapper, r)
 	var duration = time.Since(start)
 	tags = []string{
-		fmt.Sprintf("method:%s", r.Method),
-		fmt.Sprintf("status_code:%d", wrapper.Status()),
-		fmt.Sprintf("status:%s", responseStatus(r.Context(), wrapper.Status())),
+		fmt.Sprintf("server_method:%s", r.Method),
+		fmt.Sprintf("server_status_code:%d", wrapper.Status()),
+		fmt.Sprintf("server_status:%s", responseStatus(r.Context(), wrapper.Status())),
 	}
 	xstats.FromRequest(r).Timing(m.requestTime, duration, tags...)
 	xstats.FromRequest(r).Histogram(m.bytesIn, float64(bodyWrapper.BytesRead()), tags...)
