@@ -82,15 +82,15 @@ using the same stat client from the incoming request context.
 This package uses the datadog extensions to the statsd line protocol to inject
 metadata for metrics. All HTTP service metrics will be tagged with:
 
--   method
+-   server_method
 
     The HTTP method used in the incoming request.
 
--   status_code
+-   server_status_code
 
     The status code returned by the service.
 
--   status
+-   server_status
 
     A string representation of the exit status of the request. This will be
     `ok` for `2xx` range responses, `error` for other responses, `timeout` for
