@@ -1,4 +1,4 @@
-package: bitbucket.org/atlassian/httpstats
+package: github.com/asecurityteam/httpstats
 import:
 - package: github.com/rs/xstats
   subpackages:
