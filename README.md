@@ -1,13 +1,33 @@
-# httpstats #
+<a id="markdown-httpstats---standard-datadogstatsd-integration-for-http-services" name="httpstats---standard-datadogstatsd-integration-for-http-services"></a>
+# httpstats - Standard datadog/statsd integration for HTTP services. ##
 
-**Standard datadog/statsd integration for HTTP services.**
+*Status: Production*
+
+<!-- TOC -->
+
+- [httpstats - Standard datadog/statsd integration for HTTP services.](#httpstats---standard-datadogstatsd-integration-for-http-services)
+    - [Usage](#usage)
+        - [HTTP Service](#http-service)
+        - [HTTP Client](#http-client)
+    - [Standard Metrics](#standard-metrics)
+        - [HTTP Service](#http-service-1)
+            - [Tags](#tags)
+        - [HTTP Client](#http-client-1)
+            - [Tags](#tags-1)
+    - [Contributing](#contributing)
+        - [License](#license)
+        - [Contributing Agreement](#contributing-agreement)
+
+<!-- /TOC -->
 
 This project contains middleware for HTTP services and clients that uses
 [xstats](https://github.com/rs/xstats) emit detailed runtime metrics for
 service operations.
 
+<a id="markdown-usage" name="usage"></a>
 ## Usage ##
 
+<a id="markdown-http-service" name="http-service"></a>
 ### HTTP Service ###
 
 The middleware exported is a `func(http.Handler) http.Handler` and should
@@ -31,6 +51,7 @@ agent. The agent location and settings are configurable through the
 prevent several forms of skew that can arise from statsd and datadog
 aggregation of data and is described in greater detail below.
 
+<a id="markdown-http-client" name="http-client"></a>
 ### HTTP Client ###
 
 In addition to an HTTP middleware, there is also an `http.RoundTripper` wrapper
@@ -49,8 +70,10 @@ stats that are detailed below. No other configuration of the client decorator
 is needed as it will assume any options set in the middleware by nature of
 using the same stat client from the incoming request context.
 
+<a id="markdown-standard-metrics" name="standard-metrics"></a>
 ## Standard Metrics ##
 
+<a id="markdown-http-service-1" name="http-service-1"></a>
 ### HTTP Service ###
 
 -   service_bytes_received
@@ -77,6 +100,7 @@ using the same stat client from the incoming request context.
     for this can be overridden with
     `httpstats.MiddlewareOptionRequestTimeName`.
 
+<a id="markdown-tags" name="tags"></a>
 #### Tags ####
 
 This package uses the datadog extensions to the statsd line protocol to inject
@@ -101,6 +125,7 @@ Additional tags may be injected either statically or on a per-request basis
 using the `httpstats.MiddlewareOptionTag` and
 `httpstats.MiddlewareOptionRequestTag` options respectively.
 
+<a id="markdown-http-client-1" name="http-client-1"></a>
 ### HTTP Client ###
 
 -   client_request_bytes_received
@@ -225,6 +250,7 @@ using the `httpstats.MiddlewareOptionTag` and
         performing the TLS handshake.
 
 
+<a id="markdown-tags-1" name="tags-1"></a>
 #### Tags ####
 
 Unlike the service middleware, the application of tags is not universal across
@@ -232,12 +258,15 @@ all stats. Instead, each client stat comes with tags that are meaningful to that
 specific operation. Each metric above should list the applicable tags rather
 than enumerating another table here.
 
+<a id="markdown-contributing" name="contributing"></a>
 ## Contributing ##
 
+<a id="markdown-license" name="license"></a>
 ### License ###
 
 This project is licensed under Apache 2.0. See LICENSE.txt for details.
 
+<a id="markdown-contributing-agreement" name="contributing-agreement"></a>
 ### Contributing Agreement ###
 
 Atlassian requires signing a contributor's agreement before we can accept a
