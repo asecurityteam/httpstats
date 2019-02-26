@@ -1,5 +1,0 @@
-package: github.com/asecurityteam/httpstats
-import:
-- package: github.com/rs/xstats
-  subpackages:
-  - dogstatsd

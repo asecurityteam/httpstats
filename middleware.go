@@ -14,6 +14,10 @@ import (
 	"github.com/rs/xstats/dogstatsd"
 )
 
+const (
+	errorName = "error"
+)
+
 // Middleware is an http.Handler wrapper that instruments HTTP servers with the
 // standard SecDev metrics.
 type Middleware struct {
@@ -46,7 +50,7 @@ func (r *recordingReader) Read(p []byte) (int, error) {
 }
 
 func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
-	var tags []string
+	var tags = make([]string, 0, len(m.requestTaggers))
 	for _, tagger := range m.requestTaggers {
 		var k, v = tagger(r)
 		tags = append(tags, fmt.Sprintf("%s:%s", k, v))
@@ -83,7 +87,7 @@ func responseStatus(ctx context.Context, statusCode int) string {
 	if statusCode >= 200 && statusCode < 300 {
 		return "ok"
 	}
-	return "error"
+	return errorName
 }
 
 // MiddlewareOption is used to configure the HTTP server middleware.

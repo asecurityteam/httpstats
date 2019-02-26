@@ -12,6 +12,11 @@ import (
 	"github.com/rs/xstats"
 )
 
+const (
+	testName  = "test"
+	test2Name = "test2"
+)
+
 type fixtureHandler struct{}
 
 func (fixtureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
@@ -30,12 +35,12 @@ func TestMiddlewareOptionTag(t *testing.T) {
 	var sender = NewMockXStater(ctrl)
 	var result, _, e = NewMiddleware(
 		middlewareOptionSender(sender),
-		MiddlewareOptionTag("test", "test"),
+		MiddlewareOptionTag(testName, testName),
 		MiddlewareOptionBytesInName("bytesin"),
 		MiddlewareOptionBytesOutName("bytesout"),
 		MiddlewareOptionBytesTotalName("bytestotal"),
 		MiddlewareOptionRequestTimeName("requesttime"),
-		MiddlewareOptionRequestTag(func(*http.Request) (string, string) { return "test2", "test2" }),
+		MiddlewareOptionRequestTag(func(*http.Request) (string, string) { return test2Name, test2Name }),
 	)
 	if e != nil {
 		t.Fatal(e.Error())
@@ -88,7 +93,7 @@ func TestMiddlewareOptionUDPSender(t *testing.T) {
 	defer ctrl.Finish()
 
 	var sender = NewMockXStater(ctrl)
-	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPSenderDialer("localhost", 1, time.Second, "test", fixtureDialFunc))
+	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPSenderDialer("localhost", 1, time.Second, testName, fixtureDialFunc))
 	if e != nil {
 		t.Fatal(e.Error())
 	}
@@ -106,7 +111,7 @@ func TestMiddlewareOptionUDPGlobalRollupSender(t *testing.T) {
 
 	var sender = NewMockXStater(ctrl)
 	var rollupSender = NewMockSender(ctrl)
-	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPGlobalRollupSenderDialer("localhost", 1, time.Second, "test", []string{"test"}, fixtureDialFunc))
+	var result, _, e = NewMiddleware(middlewareOptionSender(sender), middlewareOptionUDPGlobalRollupSenderDialer("localhost", 1, time.Second, testName, []string{testName}, fixtureDialFunc))
 	if e != nil {
 		t.Fatal(e.Error())
 	}
@@ -127,7 +132,7 @@ func TestMiddlewareOptionUDPGlobalRollupSender(t *testing.T) {
 func TestResponseCodeStatus(t *testing.T) {
 	var ctx = context.Background()
 	var statusCode = 100
-	if responseStatus(ctx, statusCode) != "error" {
+	if responseStatus(ctx, statusCode) != errorName {
 		t.Fatal(responseStatus(ctx, statusCode))
 	}
 	statusCode = 200
@@ -135,7 +140,7 @@ func TestResponseCodeStatus(t *testing.T) {
 		t.Fatal(responseStatus(ctx, statusCode))
 	}
 	statusCode = 500
-	if responseStatus(ctx, statusCode) != "error" {
+	if responseStatus(ctx, statusCode) != errorName {
 		t.Fatal(responseStatus(ctx, statusCode))
 	}
 	var cancel func()

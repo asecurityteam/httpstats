@@ -170,7 +170,7 @@ type Transport struct {
 
 // RoundTrip instruments the HTTP request/response cycle with metrics.
 func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
-	var tags []string
+	var tags = make([]string, 0, len(t.requestTaggers))
 	for _, tagger := range t.requestTaggers {
 		var k, v = tagger(r)
 		tags = append(tags, fmt.Sprintf("%s:%s", k, v))
@@ -199,8 +199,8 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	var start = time.Now()
 	var resp, e = t.next.RoundTrip(r)
 	var duration = time.Since(start)
-	var statusCode = "error"
-	var status = "error"
+	var statusCode = errorName
+	var status = errorName
 	var bytesRead = 0
 	if e == nil {
 		statusCode = fmt.Sprintf("%d", resp.StatusCode)

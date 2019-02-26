@@ -85,8 +85,8 @@ func TestTransportOptions(t *testing.T) {
 
 	var sender = NewMockXStater(ctrl)
 	var result = NewTransport(
-		TransportOptionTag("test", "test"),
-		TransportOptionRequestTag(func(*http.Request) (string, string) { return "test2", "test2" }),
+		TransportOptionTag(testName, testName),
+		TransportOptionRequestTag(func(*http.Request) (string, string) { return test2Name, test2Name }),
 		TransportOptionRequestTimeName("requesttime"),
 		TransportOptionBytesInName("bytesin"),
 		TransportOptionBytesOutName("bytesout"),
@@ -125,10 +125,9 @@ func TestTransportNoPanicWhenBodyNil(t *testing.T) {
 	var ctrl = gomock.NewController(t)
 	defer ctrl.Finish()
 
-	// var sender = NewMockXStater(ctrl)
 	var result = NewTransport(
-		TransportOptionTag("test", "test"),
-		TransportOptionRequestTag(func(*http.Request) (string, string) { return "test2", "test2" }),
+		TransportOptionTag(testName, testName),
+		TransportOptionRequestTag(func(*http.Request) (string, string) { return test2Name, test2Name }),
 		TransportOptionRequestTimeName("requesttime"),
 		TransportOptionBytesInName("bytesin"),
 		TransportOptionBytesOutName("bytesout"),
