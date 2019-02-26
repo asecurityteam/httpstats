@@ -18,9 +18,9 @@ type rollupStatWrapper struct {
 // computeTags is intended to return a slice of tag sets that represent all
 // of the forms of a metric that should be emitted for a proper rollup. The
 // order in which the global rollup tags are defined is significant. The
-// expected behaviour is that this function will produce a tag set in which all
+// expected behavior is that this function will produce a tag set in which all
 // possible global keys are set to the global token and subsequent tag sets
-// in which the global mask is removed in favour of the original value
+// in which the global mask is removed in favor of the original value
 // iteratively, from "left to right" according to the global tag list. If
 // there is a global tag defined that does not exist in the input then the
 // global tag value will be inserted for that key in all tag sets.

@@ -49,7 +49,7 @@ type writerProxy interface {
 // wrapWriter wraps an http.ResponseWriter, returning a proxy that allows you to
 // hook into various parts of the response process.
 func wrapWriter(w http.ResponseWriter, protoMajor int) writerProxy {
-	_, cn := w.(http.CloseNotifier)
+	_, cn := w.(http.CloseNotifier) // nolint
 	_, fl := w.(http.Flusher)
 
 	bw := basicWriter{ResponseWriter: w}
@@ -143,7 +143,7 @@ type fancyWriter struct {
 }
 
 func (f *fancyWriter) CloseNotify() <-chan bool {
-	cn := f.basicWriter.ResponseWriter.(http.CloseNotifier)
+	cn := f.basicWriter.ResponseWriter.(http.CloseNotifier) // nolint
 	return cn.CloseNotify()
 }
 func (f *fancyWriter) Flush() {
@@ -169,7 +169,7 @@ func (f *fancyWriter) ReadFrom(r io.Reader) (int64, error) {
 	return n, err
 }
 
-var _ http.CloseNotifier = &fancyWriter{}
+var _ http.CloseNotifier = &fancyWriter{} // nolint
 var _ http.Flusher = &fancyWriter{}
 var _ http.Hijacker = &fancyWriter{}
 var _ io.ReaderFrom = &fancyWriter{}
@@ -183,7 +183,7 @@ type http2FancyWriter struct {
 }
 
 func (f *http2FancyWriter) CloseNotify() <-chan bool {
-	cn := f.basicWriter.ResponseWriter.(http.CloseNotifier)
+	cn := f.basicWriter.ResponseWriter.(http.CloseNotifier) // nolint
 	return cn.CloseNotify()
 }
 func (f *http2FancyWriter) Flush() {
@@ -197,6 +197,6 @@ func (f *http2FancyWriter) Push(target string, opts *http.PushOptions) error {
 	return f.basicWriter.ResponseWriter.(http.Pusher).Push(target, opts)
 }
 
-var _ http.CloseNotifier = &http2FancyWriter{}
+var _ http.CloseNotifier = &http2FancyWriter{} // nolint
 var _ http.Flusher = &http2FancyWriter{}
 var _ http.Pusher = &http2FancyWriter{}

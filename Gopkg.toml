@@ -1,0 +1,14 @@
+# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
+# for detailed Gopkg.toml documentation.
+
+[[constraint]]
+  name = "github.com/golang/mock"
+  version = "1.2.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/rs/xstats"
+
+[prune]
+  go-tests = true
+  unused-packages = true
