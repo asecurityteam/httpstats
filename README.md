@@ -1,6 +1,8 @@
 <a id="markdown-httpstats---standard-datadogstatsd-integration-for-http-services" name="httpstats---standard-datadogstatsd-integration-for-http-services"></a>
 # httpstats - Standard datadog/statsd integration for HTTP services. ##
 [![GoDoc](https://godoc.org/github.com/asecurityteam/httpstats?status.svg)](https://godoc.org/github.com/asecurityteam/httpstats)
+[![Build Status](https://travis-ci.com/asecurityteam/httpstats.png?branch=master)](https://travis-ci.com/asecurityteam/httpstats)
+[![codecov.io](https://codecov.io/github/asecurityteam/httpstats/coverage.svg?branch=master)](https://codecov.io/github/asecurityteam/httpstats?branch=master)
 
 *Status: Production*
 
