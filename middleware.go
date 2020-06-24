@@ -16,6 +16,7 @@ import (
 
 const (
 	errorName = "error"
+	errorCode = "-1"
 )
 
 // Middleware is an http.Handler wrapper that instruments HTTP servers with the

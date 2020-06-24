@@ -199,7 +199,7 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	var start = time.Now()
 	var resp, e = t.next.RoundTrip(r)
 	var duration = time.Since(start)
-	var statusCode = errorName
+	var statusCode = errorCode
 	var status = errorName
 	var bytesRead = 0
 	if e == nil {
