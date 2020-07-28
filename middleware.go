@@ -2,6 +2,7 @@ package httpstats
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -16,7 +17,6 @@ import (
 
 const (
 	errorName = "error"
-	errorCode = "-1"
 )
 
 // Middleware is an http.Handler wrapper that instruments HTTP servers with the
@@ -89,6 +89,14 @@ func responseStatus(ctx context.Context, statusCode int) string {
 		return "ok"
 	}
 	return errorName
+}
+
+func errorToStatusCode(err error) int {
+	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+		return http.StatusGatewayTimeout
+	} else {
+		return http.StatusBadGateway
+	}
 }
 
 // MiddlewareOption is used to configure the HTTP server middleware.
