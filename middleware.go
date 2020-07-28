@@ -91,12 +91,11 @@ func responseStatus(ctx context.Context, statusCode int) string {
 	return errorName
 }
 
-func errorToStatusCode(err error) int {
+func ErrorToStatusCode(err error) int {
 	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 		return http.StatusGatewayTimeout
-	} else {
-		return http.StatusBadGateway
 	}
+	return http.StatusBadGateway
 }
 
 // MiddlewareOption is used to configure the HTTP server middleware.
