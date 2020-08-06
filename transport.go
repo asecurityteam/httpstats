@@ -199,8 +199,8 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 	var start = time.Now()
 	var resp, e = t.next.RoundTrip(r)
 	var duration = time.Since(start)
-	var statusCode = errorCode
-	var status = errorName
+	var statusCode string
+	var status string
 	var bytesRead = 0
 	if e == nil {
 		statusCode = fmt.Sprintf("%d", resp.StatusCode)
@@ -217,6 +217,10 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 			tags:             tags,
 			ctx:              r.Context(),
 		}
+	} else {
+		var errorStatusCode = errorToStatusCode(e)
+		statusCode = fmt.Sprintf("%d", errorStatusCode)
+		status = responseStatus(r.Context(), errorStatusCode)
 	}
 	var timerTags = append(tags, fmt.Sprintf("method:%s", r.Method), fmt.Sprintf("status_code:%s", statusCode), fmt.Sprintf("status:%s", status))
 	xstats.FromRequest(r).Timing(t.requestTime, duration, timerTags...)
