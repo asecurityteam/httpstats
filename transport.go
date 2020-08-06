@@ -170,6 +170,7 @@ type Transport struct {
 
 // RoundTrip instruments the HTTP request/response cycle with metrics.
 func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
+	var method = r.Method
 	var tags = make([]string, 0, len(t.requestTaggers))
 	for _, tagger := range t.requestTaggers {
 		var k, v = tagger(r)
@@ -222,7 +223,7 @@ func (t *Transport) RoundTrip(r *http.Request) (*http.Response, error) {
 		statusCode = fmt.Sprintf("%d", errorStatusCode)
 		status = responseStatus(r.Context(), errorStatusCode)
 	}
-	var timerTags = append(tags, fmt.Sprintf("method:%s", r.Method), fmt.Sprintf("status_code:%s", statusCode), fmt.Sprintf("status:%s", status))
+	var timerTags = append(tags, fmt.Sprintf("method:%s", method), fmt.Sprintf("status_code:%s", statusCode), fmt.Sprintf("status:%s", status))
 	xstats.FromRequest(r).Timing(t.requestTime, duration, timerTags...)
 	xstats.FromRequest(r).Histogram(t.bytesIn, float64(bytesRead), tags...)
 	return resp, e
