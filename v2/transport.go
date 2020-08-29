@@ -389,3 +389,29 @@ func NewTransport(options ...TransportOption) func(http.RoundTripper) http.Round
 		return m
 	}
 }
+
+// StatTransport is an `http.RoundTripper` decorator that injects an
+// `xstats.XStater` into the `context.Context` of the current `http.Request`.
+//
+// The `StatTransport` can then, in turn, be decorated with `Transport` to
+// make use of the injected `xstats.XStater` to emit key HTTP metrics on
+// each RoundTrip.
+type StatTransport struct {
+	stats   xstats.XStater
+	wrapped http.RoundTripper
+}
+
+// RoundTrip injects an `xstats.XStater` into the request and invokes the
+// wrapped `http.RoundTripper`.
+func (t *StatTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	r = r.WithContext(xstats.NewContext(r.Context(), xstats.Copy(t.stats)))
+	return t.wrapped.RoundTrip(r)
+}
+
+// NewStatTransport returns a function that wraps a `transport.Decorator` in a
+// `StatTransport` `transport.Decorator`.
+func NewStatTransport(stats xstats.XStater) func(http.RoundTripper) http.RoundTripper {
+	return func(next http.RoundTripper) http.RoundTripper {
+		return &StatTransport{stats: stats, wrapped: next}
+	}
+}

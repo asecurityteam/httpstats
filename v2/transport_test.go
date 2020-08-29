@@ -13,6 +13,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/rs/xstats"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTraceStats(t *testing.T) {
@@ -142,4 +143,27 @@ func TestTransportNoPanicWhenBodyNil(t *testing.T) {
 	var r = result(http.DefaultTransport)
 	var req, _ = http.NewRequest(http.MethodGet, "https://localhost/asdfasdfadsf", nil)
 	_, _ = r.RoundTrip(req)
+}
+
+type instanceStoreTransport struct {
+	instance xstats.XStater
+}
+
+func (t *instanceStoreTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	t.instance = xstats.FromRequest(r)
+	return &http.Response{
+		StatusCode: 200,
+		Body:       ioutil.NopCloser(bytes.NewBufferString(``)),
+	}, nil
+}
+
+func TestNewStatTransport(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	var sender = NewMockXStater(ctrl)
+	wrapped := &instanceStoreTransport{}
+	stats := xstats.New(sender)
+	transport := NewStatTransport(stats)(wrapped)
+	_, _ = transport.RoundTrip(httptest.NewRequest(http.MethodGet, "/", nil))
+	assert.NotNil(t, wrapped.instance)
 }
