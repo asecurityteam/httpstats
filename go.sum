@@ -1,5 +1,6 @@
 github.com/golang/mock v1.3.1 h1:qGJ6qTW+x6xX/my+8YUVl4WNpX9B7+/l2tRsHGZ7f2s=
 github.com/golang/mock v1.3.1/go.mod h1:sBzyDLLjw3U8JLTeZvSv8jJB+tU5PVekmnlKIyFUx0Y=
+github.com/golang/mock v1.4.4/go.mod h1:l3mdAwkq5BuhzHwde/uurv3sEJeZMXNpwsxVWU71h+4=
 github.com/rs/xhandler v0.0.0-20170707052532-1eb70cf1520d h1:8Tt7DYYdFqLlOIuyiE0RluKem4T+048AUafnIjH80wg=
 github.com/rs/xhandler v0.0.0-20170707052532-1eb70cf1520d/go.mod h1:RvLn4FgxWubrpZHtQLnOf6EwhN2hEMusxZOhcW9H3UQ=
 github.com/rs/xstats v0.0.0-20170813190920-c67367528e16 h1:m0aigb++JZXs+tzTO60LOOKSOXWyr7scDxlaSvU6HN8=
