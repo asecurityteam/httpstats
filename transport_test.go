@@ -5,7 +5,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/http/httptrace"
@@ -101,7 +101,7 @@ func TestTransportOptions(t *testing.T) {
 	var r = result(&fixtureTransport{
 		response: &http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(``)),
+			Body:       io.NopCloser(bytes.NewBufferString(``)),
 		},
 		err: nil,
 	}).(*Transport)

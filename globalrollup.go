@@ -28,12 +28,13 @@ type rollupStatWrapper struct {
 // For example:
 // GIVEN: globals = []string{"region", "az", "host", "container"}
 // GIVEN: inputTags = []string{"region:us-west2", "az:a", "host:1234", "myTag:myValue"}
-// EXPECTED: results = [][]string{
-//												[]string{"region:global", "az:global", "host:global", "container:global", "myTag:myValue"},
-//												[]string{"region:us-west2", "az:global", "host:global", "container:global", "myTag:myValue"},
-//												[]string{"region:us-west2", "az:a", "host:global", "container:global", "myTag:myValue"},
-//												[]string{"region:us-west2", "az:a", "host:1234", "container:global", "myTag:myValue"},
-//										 }
+//
+//	EXPECTED: results = [][]string{
+//													[]string{"region:global", "az:global", "host:global", "container:global", "myTag:myValue"},
+//													[]string{"region:us-west2", "az:global", "host:global", "container:global", "myTag:myValue"},
+//													[]string{"region:us-west2", "az:a", "host:global", "container:global", "myTag:myValue"},
+//													[]string{"region:us-west2", "az:a", "host:1234", "container:global", "myTag:myValue"},
+//											 }
 func (s *rollupStatWrapper) computeTags(inputTags []string) [][]string {
 	var output = make([][]string, 0, len(s.globals))
 	// Populate any missing global values.
