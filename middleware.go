@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"sync/atomic"
@@ -228,7 +227,7 @@ func NewMiddleware(options ...MiddlewareOption) (func(http.Handler) http.Handler
 	}
 
 	if len(m.senders) < 1 {
-		m.senders = append(m.senders, dogstatsd.New(ioutil.Discard, 10*time.Second))
+		m.senders = append(m.senders, dogstatsd.New(io.Discard, 10*time.Second))
 	}
 
 	var taggedSender = xstats.New(xstats.MultiSender(m.senders))
