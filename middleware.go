@@ -91,10 +91,7 @@ func responseStatus(ctx context.Context, statusCode int) string {
 }
 
 func errorToStatusCode(err error) int {
-	if errors.Is(err, context.Canceled) {
-		return 499
-	}
-	if errors.Is(err, context.DeadlineExceeded) {
+	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 		return http.StatusGatewayTimeout
 	}
 	return http.StatusBadGateway
