@@ -146,6 +146,7 @@ func TestResponseCodeStatus(t *testing.T) {
 	var cancel func()
 	ctx, cancel = context.WithCancel(context.Background())
 	cancel()
+	//nolint: misspell
 	if responseStatus(ctx, statusCode) != "cancelled" {
 		t.Fatal(responseStatus(ctx, statusCode))
 	}

@@ -82,6 +82,8 @@ func responseStatus(ctx context.Context, statusCode int) string {
 		if ctx.Err() == context.DeadlineExceeded {
 			return "timeout"
 		}
+		//FIXME :facepalm: - this typo is now part of api as we use it for tag value
+		//nolint: misspell
 		return "cancelled"
 	}
 	if statusCode >= 200 && statusCode < 300 {
