@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/mock/gomock"
 	"github.com/rs/xstats"
+	"go.uber.org/mock/gomock"
 )
 
 const (
