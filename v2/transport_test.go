@@ -11,9 +11,9 @@ import (
 	"net/http/httptrace"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/rs/xstats"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 )
 
 func TestTraceStats(t *testing.T) {

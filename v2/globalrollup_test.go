@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"go.uber.org/mock/gomock"
+	"github.com/golang/mock/gomock"
 )
 
 func TestGlobalRollupTagComputation(t *testing.T) {
