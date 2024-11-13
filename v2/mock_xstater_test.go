@@ -6,7 +6,7 @@ package httpstats
 import (
 	time "time"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // Mock of XStater interface
