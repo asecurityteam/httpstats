@@ -2,6 +2,20 @@
 # httpstats - Standard datadog/statsd integration for HTTP services. ##
 [![GoDoc](https://godoc.org/github.com/asecurityteam/httpstats?status.svg)](https://godoc.org/github.com/asecurityteam/httpstats)
 
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=bugs)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=code_smells)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=coverage)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=ncloc)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=alert_status)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=security_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=sqale_index)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httpstats&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=asecurityteam_httpstats)
+
+
 *Status: Production*
 
 <!-- TOC -->
