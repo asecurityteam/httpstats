@@ -2,11 +2,11 @@ module github.com/asecurityteam/httpstats/v2
 
 go 1.22
 
-toolchain go1.22.5
+toolchain go1.23.6
 
 require (
 	github.com/rs/xstats v0.0.0-20170813190920-c67367528e16
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	go.uber.org/mock v0.5.0
 )
 
