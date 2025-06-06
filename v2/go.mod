@@ -1,6 +1,6 @@
 module github.com/asecurityteam/httpstats/v2
 
-go 1.23
+go 1.24.4
 
 toolchain go1.24.3
 
