@@ -45,7 +45,7 @@ func (r *recordingReader) BytesRead() int {
 
 func (r *recordingReader) Read(p []byte) (int, error) {
 	var n, e = r.ReadCloser.Read(p)
-	atomic.AddInt32(r.bytesRead, int32(n))
+	atomic.AddInt32(r.bytesRead, int32(n)) // nolint:gosec // G115: n from Read() is always non-negative
 	return n, e
 }
 
