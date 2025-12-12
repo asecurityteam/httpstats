@@ -128,7 +128,7 @@ type flushWriter struct {
 func (f *flushWriter) Flush() {
 	f.wroteHeader = true
 
-	fl := f.ResponseWriter.(http.Flusher)
+	fl := f.basicWriter.ResponseWriter.(http.Flusher) // nolint:staticcheck // QF1008: explicit field selector for clarity
 	fl.Flush()
 }
 
@@ -149,23 +149,23 @@ func (f *fancyWriter) CloseNotify() <-chan bool {
 func (f *fancyWriter) Flush() {
 	f.wroteHeader = true
 
-	fl := f.ResponseWriter.(http.Flusher)
+	fl := f.basicWriter.ResponseWriter.(http.Flusher) // nolint:staticcheck // QF1008: explicit field selector for clarity
 	fl.Flush()
 }
 func (f *fancyWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
-	hj := f.ResponseWriter.(http.Hijacker)
+	hj := f.basicWriter.ResponseWriter.(http.Hijacker) // nolint:staticcheck // QF1008: explicit field selector for clarity
 	return hj.Hijack()
 }
 func (f *fancyWriter) ReadFrom(r io.Reader) (int64, error) {
-	if f.tee != nil {
+	if f.basicWriter.tee != nil { // nolint:staticcheck // QF1008: explicit field selector for clarity
 		n, err := io.Copy(&f.basicWriter, r)
-		f.bytes += int(n)
+		f.basicWriter.bytes += int(n) // nolint:staticcheck,gosec // QF1008: explicit field selector for clarity; G115: n is from io.Copy, safe conversion
 		return n, err
 	}
-	rf := f.ResponseWriter.(io.ReaderFrom)
-	f.maybeWriteHeader()
+	rf := f.basicWriter.ResponseWriter.(io.ReaderFrom) // nolint:staticcheck // QF1008: explicit field selector for clarity
+	f.basicWriter.maybeWriteHeader()                   // nolint:staticcheck // QF1008: explicit field selector for clarity
 	n, err := rf.ReadFrom(r)
-	f.bytes += int(n)
+	f.basicWriter.bytes += int(n) // nolint:staticcheck,gosec // QF1008: explicit field selector for clarity; G115: n is from ReadFrom, safe conversion
 	return n, err
 }
 
@@ -189,12 +189,12 @@ func (f *http2FancyWriter) CloseNotify() <-chan bool {
 func (f *http2FancyWriter) Flush() {
 	f.wroteHeader = true
 
-	fl := f.ResponseWriter.(http.Flusher)
+	fl := f.basicWriter.ResponseWriter.(http.Flusher) // nolint:staticcheck // QF1008: explicit field selector for clarity
 	fl.Flush()
 }
 
 func (f *http2FancyWriter) Push(target string, opts *http.PushOptions) error {
-	return f.ResponseWriter.(http.Pusher).Push(target, opts)
+	return f.basicWriter.ResponseWriter.(http.Pusher).Push(target, opts) // nolint:staticcheck // QF1008: explicit field selector for clarity
 }
 
 var _ http.CloseNotifier = &http2FancyWriter{} // nolint
