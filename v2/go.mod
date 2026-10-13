@@ -1,8 +1,6 @@
 module github.com/asecurityteam/httpstats/v2
 
-go 1.23
-
-toolchain go1.24.3
+go 1.25.0
 
 require (
 	github.com/rs/xstats v0.0.0-20170813190920-c67367528e16
@@ -15,6 +13,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.11.1 // indirect
 	github.com/rs/xhandler v0.0.0-20170707052532-1eb70cf1520d // indirect
-	golang.org/x/net v0.9.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
